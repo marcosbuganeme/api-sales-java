@@ -1,0 +1,11 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - ApiJavaSalesApplication",
+            "request": "launch",
+            "mainClass": "br.com.api.sales.java.ApiJavaSalesApplication",
+            "projectName": "api-java-sales"
+        }
+    ]
+}
