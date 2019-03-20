@@ -26,12 +26,11 @@ public @Service class ProductService {
     @Transactional
     public Product update(Long id, Product product) {
 
-        Product productSearch = repository.findById(id).orElse(null);
+        repository
+            .findById(id).
+            orElseThrow( () -> new IllegalArgumentException("Product is invalid"));
 
-        Optional
-            .ofNullable(productSearch)
-            .filter(Objects::nonNull)
-            .orElseThrow( () -> new IllegalArgumentException("Product is invalid"));
+        product.setId(id);
 
         return create(product);
     }
