@@ -10,30 +10,26 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.com.api.sales.java.exception.ResourceNotFoundException;
 import br.com.api.sales.java.model.Product;
 import br.com.api.sales.java.repository.ProductJpaRepository;
 
 public @Service class ProductService {
 
-    static final String MESSAGE_ERROR = "Product is invalid";
-	static final Supplier<IllegalArgumentException> EXCEPTION_SUPPLIER = () -> new IllegalArgumentException(MESSAGE_ERROR);
-
     private @Autowired ProductJpaRepository repository;
 
-    @Transactional(rollbackFor =  IllegalArgumentException.class)
+    @Transactional(rollbackFor =  Exception.class)
     public Product create(Product product) {
-
-        validateBusiness(product);
 
         return repository.save(product);
     }
 
-    @Transactional(rollbackFor =  IllegalArgumentException.class)
+    @Transactional(rollbackFor =  ResourceNotFoundException.class)
     public Product update(Long id, Product product) {
 
         repository
             .findById(id)
-            .orElseThrow(EXCEPTION_SUPPLIER);
+            .orElseThrow(() -> new ResourceNotFoundException("Resource not found"));
 
         product.setId(id);
 
@@ -42,12 +38,5 @@ public @Service class ProductService {
 
     public Page<Product> getAllProducts(Pageable pageable) {
         return repository.findAll(pageable);
-    }
-
-    final void validateBusiness(Product product) {
-        Optional
-            .ofNullable(product)
-            .filter(Objects::nonNull)
-            .orElseThrow(EXCEPTION_SUPPLIER);
     }
 }
