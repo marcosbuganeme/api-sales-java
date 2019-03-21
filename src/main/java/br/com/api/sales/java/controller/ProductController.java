@@ -46,9 +46,18 @@ public class ProductController {
     @PutMapping("edit/{id}")
     public ResponseEntity<?> updateProduct(@PathVariable("id") Long id, @Validated @RequestBody Product product) {
 
-        Product productUpdate = service.update(id, product);
+        Product productUpdate;
 
-        return ResponseEntity.ok(productUpdate);
+        try {
+
+            productUpdate = service.update(id, product);
+
+            return ResponseEntity.ok(productUpdate);
+
+        } catch (Exception exception) {
+
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @GetMapping("all")
@@ -57,7 +66,7 @@ public class ProductController {
 
         return Optional
                 .ofNullable(products)
-                .filter(product -> !products.getContent().isEmpty())
+                .filter(product -> products.getContent().isEmpty())
                 .map(results -> ResponseEntity.notFound().build())
                 .orElse(ResponseEntity.ok(products));
     }
