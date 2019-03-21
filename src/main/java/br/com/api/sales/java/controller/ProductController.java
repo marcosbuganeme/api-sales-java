@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -49,14 +52,13 @@ public class ProductController {
     }
 
     @GetMapping("all")
-    public ResponseEntity<?> allProducts() {
-        List<Product> products = service.getAllProducts();
+    public ResponseEntity<?> allProducts(@PageableDefault Pageable pageable) {
+        Page<Product> products = service.getAllProducts(pageable);
 
-        Optional
-            .ofNullable(products)
-            .filter(product -> !products.isEmpty())
-            .orElseThrow(() -> new IllegalArgumentException("Nenhum produto encontrado"));
-
-        return ResponseEntity.ok(products);
+        return Optional
+                .ofNullable(products)
+                .filter(product -> !products.getContent().isEmpty())
+                .map(results -> ResponseEntity.notFound().build())
+                .orElse(ResponseEntity.ok(products));
     }
 }

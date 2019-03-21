@@ -1,10 +1,11 @@
 package br.com.api.sales.java.service;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,8 +36,8 @@ public @Service class ProductService {
         return create(product);
     }
 
-    public List<Product> getAllProducts() {
-        return repository.findAll();
+    public Page<Product> getAllProducts(Pageable pageable) {
+        return repository.findAll(pageable);
     }
 
     final void validateBusiness(Product product) {
