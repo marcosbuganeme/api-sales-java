@@ -1,9 +1,5 @@
 package br.com.api.sales.java.service;
 
-import java.util.Objects;
-import java.util.Optional;
-import java.util.function.Supplier;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,7 +12,12 @@ import br.com.api.sales.java.repository.ProductJpaRepository;
 
 public @Service class ProductService {
 
-    private @Autowired ProductJpaRepository repository;
+    private final ProductJpaRepository repository;
+
+    @Autowired
+    public ProductService(ProductJpaRepository repository) {
+        this.repository = repository;
+    }
 
     @Transactional(rollbackFor =  Exception.class)
     public Product create(Product product) {
