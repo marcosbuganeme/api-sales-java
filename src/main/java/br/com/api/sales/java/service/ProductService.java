@@ -27,16 +27,27 @@ public @Service class ProductService {
     @Transactional(rollbackFor =  ResourceNotFoundException.class)
     public Product update(Long id, Product product) {
 
-        repository
-            .findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Resource not found"));
-
+        searchProduct(id);
         product.setId(id);
 
         return create(product);
     }
 
+    @Transactional(rollbackFor =  ResourceNotFoundException.class)
+	public void delete(Long id) {
+
+        searchProduct(id);
+        repository.deleteById(id);
+	}
+
     public Page<Product> getAllProducts(Pageable pageable) {
         return repository.findAll(pageable);
+    }
+
+    final void searchProduct(Long id) {
+
+        repository
+            .findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Resource not found"));
     }
 }
