@@ -25,21 +25,23 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import br.com.api.sales.java.model.Product;
 import br.com.api.sales.java.service.ProductService;
+import io.swagger.annotations.ApiOperation;
 
 @RestController
-@RequestMapping("products")
+@RequestMapping("v1/products")
 public class ProductController {
 
     private @Autowired ProductService service;
 
     @PostMapping("save")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @ApiOperation(value = "Create product for id valid", response = Product.class)
     public ResponseEntity<?> createProduct(@Valid @RequestBody Product product, UriComponentsBuilder uriBuilder) {
 
         Product createdProduct = service.create(product);
 
         URI location = uriBuilder
-                        .path("products/edit/{id:\\d+}")
+                        .path("v1/products/edit/{id:\\d+}")
                         .buildAndExpand(createdProduct.getId())
                         .toUri();
 
@@ -48,6 +50,7 @@ public class ProductController {
 
     @PutMapping("edit/{id:\\d+}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @ApiOperation(value = "Update product for id valid", response = Product.class)
     public ResponseEntity<?> updateProduct(@PathVariable Long id, @Valid @RequestBody Product product) {
 
         Product productUpdate = service.update(id, product);
@@ -57,6 +60,7 @@ public class ProductController {
 
     @DeleteMapping("delete/{id:\\d+}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @ApiOperation(value = "Delete product for id valid", response = Void.class)
     public ResponseEntity<?> deleteProduct(@PathVariable Long id) {
 
         service.delete(id);
@@ -65,6 +69,7 @@ public class ProductController {
     }
 
     @GetMapping("all")
+    @ApiOperation(value = "Return a list with all products", response = Product[].class)
     public ResponseEntity<?> allProducts(@PageableDefault Pageable pageable) {
         Page<Product> results = service.getAllProducts(pageable);
 
