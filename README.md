@@ -3,8 +3,10 @@ backend em java de um força de vendas
 
 2 tipos de credenciais
 
-user: user
-password: user
+user: <b>user</b>
+<br>
+password: <b>user</b>
 
-user: admin
-password: admin
+user: <b>admin</b>
+<br>
+password: <b>admin</b>
