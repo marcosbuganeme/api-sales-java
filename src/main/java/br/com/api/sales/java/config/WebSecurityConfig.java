@@ -38,16 +38,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         final User.UserBuilder userBuilder = User.builder().passwordEncoder(encoder::encode);
 
         UserDetails user = userBuilder
-                .username("user")
-                .password("password")
-                .roles("USER")
-                .build();
+                            .username("user")
+                            .password("user")
+                            .roles("USER")
+                            .build();
 
         UserDetails admin = userBuilder
-                .username("admin")
-                .password("password")
-                .roles("USER","ADMIN")
-                .build();
+                                .username("admin")
+                                .password("admin")
+                                .roles("USER","ADMIN")
+                                .build();
 
         return new InMemoryUserDetailsManager(user, admin);
     }
