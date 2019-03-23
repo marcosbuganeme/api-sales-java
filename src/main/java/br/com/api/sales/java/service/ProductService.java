@@ -26,12 +26,11 @@ public @Service class ProductService {
     }
 
     @Transactional(rollbackFor =  ResourceNotFoundException.class)
-    public Product update(Long id, Product product) {
+    public void update(Long id, Product product) {
 
         searchProduct(id);
         product.setId(id);
-
-        return create(product);
+        create(product);
     }
 
     @Transactional(rollbackFor =  ResourceNotFoundException.class)
@@ -49,6 +48,6 @@ public @Service class ProductService {
 
         repository
             .findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Resource not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
     }
 }

@@ -1,7 +1,7 @@
 package br.com.api.sales.java.exception.builder;
 
 public class ResourceNotFoundDetails extends ErrorDetails {
-    
+
     public static final class Builder {
 
         private String title;
