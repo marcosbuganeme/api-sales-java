@@ -7,6 +7,10 @@
 # BlueJ files
 *.ctxt
 
+# IDE's eclipse sts
+target/*
+.settings/*
+
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
