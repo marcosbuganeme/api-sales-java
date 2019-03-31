@@ -14,6 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.data.annotation.CreatedDate;
 
@@ -57,6 +58,7 @@ public final class Order extends DomainAbstract<Long> {
 	}
 
 	@OneToOne
+	@NotNull(message = "Customer is required")
 	@JoinColumn(name = "id_customer", nullable = false)
 	public Customer getCustomer() {
 		return customer;

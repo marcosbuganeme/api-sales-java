@@ -2,6 +2,7 @@ package br.com.api.sales.java.model;
 
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -26,7 +27,7 @@ public final class OrderItem extends DomainAbstract<Long> {
 
 	public Double totalPrice() {
 
-		verifyAmountIsNonNull();
+		verifyAmountIsValid();
 		verifyThatProductIsValid();
 		Double unitPrice = product.getPrice();
 
@@ -72,12 +73,21 @@ public final class OrderItem extends DomainAbstract<Long> {
 		this.quantity = quantity;
 	}
 
-	private void verifyAmountIsNonNull() {
+	private void verifyAmountIsValid() {
 
 		Optional
 			.ofNullable(quantity)
-			.filter(verify -> quantity < 0)
+			.filter(nonNull()
+			   .and(quantityGreaterThanZero()))
 			.orElseThrow(() -> new IllegalArgumentException("Amount invalid"));
+	}
+
+	private Predicate<Integer> nonNull() {
+		return Objects::nonNull;
+	}
+
+	private Predicate<Integer> quantityGreaterThanZero() {
+		return quantity -> quantity < 0;
 	}
 
 	private void verifyThatProductIsValid() {
