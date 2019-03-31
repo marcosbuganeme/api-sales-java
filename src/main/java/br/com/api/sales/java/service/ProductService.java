@@ -1,5 +1,7 @@
 package br.com.api.sales.java.service;
 
+import java.util.Objects;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,6 +23,8 @@ public @Service class ProductService {
 
     @Transactional(rollbackFor =  Exception.class)
     public Product create(Product product) {
+
+    	validatedAfterSave(product);
 
         return repository.save(product);
     }
@@ -44,10 +48,18 @@ public @Service class ProductService {
         return repository.findAll(pageable);
     }
 
-    final void searchProduct(Long id) {
+    private void searchProduct(Long id) {
 
         repository
             .findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+    }
+
+    private void validatedAfterSave(Product product) {
+
+        repository
+            .findByNameAllIgnoreCaseAndPrice(product.getName(), product.getPrice())
+            .filter(Objects::isNull)
+            .orElseThrow(() -> new ResourceNotFoundException("Product exists"));
     }
 }
