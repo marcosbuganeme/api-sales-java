@@ -3,10 +3,10 @@ package br.com.api.sales.java.exception;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-@ResponseStatus(HttpStatus.NOT_FOUND)
-public class ResourceNotFoundException extends RuntimeException {
+@ResponseStatus(HttpStatus.CONFLICT)
+public class ResourceDuplicateException extends RuntimeException {
     
-    public ResourceNotFoundException(String message) {
+    public ResourceDuplicateException(String message) {
         super(message);
     }
 }
