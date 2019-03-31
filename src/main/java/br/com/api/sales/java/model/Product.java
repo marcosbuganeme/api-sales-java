@@ -1,7 +1,6 @@
 package br.com.api.sales.java.model;
 
 import java.math.BigDecimal;
-import java.util.Optional;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -47,12 +46,7 @@ public class Product extends DomainAbstract<Long> {
 
     public void setName(String name) {
 
-        this.name = Optional
-        				.ofNullable(name)
-        				.filter(isNotBlank())
-        				.map(stripAccents())
-        				.map(toLowerCase())
-        				.orElse(null);
+        this.name = cleanString(name);
     }
 
     @NotNull(message = "Price is required")

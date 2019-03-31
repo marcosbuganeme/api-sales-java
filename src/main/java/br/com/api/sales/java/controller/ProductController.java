@@ -34,7 +34,7 @@ public class ProductController extends ControllerShared<Product> {
 
     private @Autowired ProductService service;
 
-    @PostMapping("save")
+    @PostMapping
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @ApiOperation(value = "Create product for id valid", response = Product.class)
     public ResponseEntity<?> createProduct(@Valid @RequestBody Product product, UriComponentsBuilder uriBuilder) {
@@ -42,14 +42,14 @@ public class ProductController extends ControllerShared<Product> {
         Product createdProduct = service.create(product);
 
         URI location = uriBuilder
-                        .path("v1/products/edit/{id:\\d+}")
+                        .path("v1/products/{id:\\d+}")
                         .buildAndExpand(createdProduct.getId())
                         .toUri();
 
         return ResponseEntity.created(location).body(createdProduct);
     }
 
-    @PutMapping("edit/{id:\\d+}")
+    @PutMapping("{id:\\d+}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @ApiOperation(value = "Update product for id valid", response = Product.class)
     public ResponseEntity<?> updateProduct(@PathVariable Long id, @Valid @RequestBody Product product) {
@@ -59,7 +59,7 @@ public class ProductController extends ControllerShared<Product> {
         return ResponseEntity.ok(product);
     }
 
-    @DeleteMapping("delete/{id:\\d+}")
+    @DeleteMapping("{id:\\d+}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @ApiOperation(value = "Delete product for id valid", response = Void.class)
     public ResponseEntity<?> deleteProduct(@PathVariable Long id) {
@@ -69,15 +69,28 @@ public class ProductController extends ControllerShared<Product> {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("all")
+    @GetMapping("{id:\\d+}")
+    @ApiOperation(value = "Return find product by id", response = Product.class)
+    public ResponseEntity<?> findProdutById(@PathVariable Long id) {
+
+    	Product productSearch = service.findById(id);
+    	
+        return Optional
+                .ofNullable(productSearch)
+                .filter(filterObjectIsNull())
+                .map(objectResourceNotFound())
+                .orElse(ResponseEntity.ok(productSearch));
+    }
+    
+    @GetMapping
     @ApiOperation(value = "Return a list with all products", response = Product[].class)
     public ResponseEntity<?> allProducts(@PageableDefault Pageable pageable) {
-        Page<Product> results = service.getAllProducts(pageable);
+        Page<Product> results = service.findAllProducts(pageable);
 
         return Optional
                 .ofNullable(results)
-                .filter(filterResultIsEmpty())
-                .map(mapResourceNotFound())
+                .filter(filterListIsEmpty())
+                .map(pageResourceNotFound())
                 .orElse(ResponseEntity.ok(results));
     }
 }

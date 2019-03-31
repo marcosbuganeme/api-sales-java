@@ -1,6 +1,7 @@
 package br.com.api.sales.java.service;
 
 import java.util.Objects;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -33,34 +34,64 @@ public @Service class ProductService {
     @Transactional(rollbackFor =  ResourceNotFoundException.class)
     public void update(Long id, Product product) {
 
-        searchProduct(id);
-        product.setId(id);
+    	buildProductForUpdate(id, product);
+
         repository.save(product);
     }
 
     @Transactional(rollbackFor =  ResourceNotFoundException.class)
 	public void delete(Long id) {
 
-        searchProduct(id);
+    	checkProductExists(id);
+
         repository.deleteById(id);
 	}
 
-    public Page<Product> getAllProducts(Pageable pageable) {
-        return repository.findAll(pageable);
+    public Product findById(Long id) {
+
+    	return repository
+    				.findById(id)
+    				.filter(Objects::nonNull)
+    				.orElse(null);
     }
 
-    private void searchProduct(Long id) {
-
-        repository
-            .findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+    public Page<Product> findAllProducts(Pageable pageable) {
+        return repository.findAll(pageable);
     }
 
     private void validatedAfterSave(Product product) {
 
-        Product searchProduct = repository.findByNameAllIgnoreCaseAndPrice(product.getName(), product.getPrice());
+        Product findProduct = repository.findByNameAllIgnoreCaseAndPrice(product.getName(), product.getPrice());
 
-        if (Objects.nonNull(searchProduct))
+        if (Objects.nonNull(findProduct))
         	throw new ResourceDuplicateException("Product exists");
     }
+
+	/**
+	 * Pesquisa um produto, caso o encontre ele atualiza com o produto que está submetido a alteração
+	 */
+	private void buildProductForUpdate(Long id, Product productUpdate) {
+
+		Product findProduct = checkProductExists(id);
+
+        productUpdate.setId(id);
+        productUpdate.setCriado(findProduct.getCriado());
+        productUpdate.setModificado(findProduct.getModificado());
+	}
+
+	/**
+	 * Checa a existência de um produto.
+	 * Caso não encontre, uma exceção <code>ResourceNotFoundException</code> será lançada
+	 * Senão retorna o produto encontrado
+	 */
+	private Product checkProductExists(Long id) {
+
+		Product product = findById(id);
+
+		Optional
+	        .ofNullable(product)
+	        .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+
+		return product;
+	}
 }
