@@ -1,5 +1,6 @@
 package br.com.api.sales.java.model;
 
+import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,11 +13,12 @@ import br.com.api.sales.java.model.shared.DomainAbstract;
 
 @Entity
 @Table(name = "customer")
-public class Customer extends DomainAbstract<Long> {
+public final class Customer extends DomainAbstract<Long> {
 
 	private Long id;
 	private String name;
 	private String mail;
+	private String phone;
 	private Address address;
 
 	@Id
@@ -28,23 +30,33 @@ public class Customer extends DomainAbstract<Long> {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	
+
+	@Column(nullable = false)
 	@NotBlank(message = "Name is required")
 	public String getName() {
 		return name;
 	}
 
 	public void setName(String name) {
-		this.name = cleanString(name);
+		this.name = cleanAndTransformString(name);
 	}
 
+	@Column(nullable = false)
 	@NotBlank(message = "Mail is required")
 	public String getMail() {
 		return mail;
 	}
 
 	public void setMail(String mail) {
-		this.mail = cleanString(mail);
+		this.mail = cleanAndTransformString(mail);
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
 	}
 
 	@Embedded

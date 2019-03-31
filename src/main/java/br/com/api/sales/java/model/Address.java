@@ -25,7 +25,7 @@ public final class Address extends DomainFunctions<Long> {
 	}
 
 	public void setStreet(String street) {
-		this.street  = cleanString(street);
+		this.street  = cleanAndTransformString(street);
 	}
 
 	@Column(nullable = false)
@@ -35,7 +35,7 @@ public final class Address extends DomainFunctions<Long> {
 	}
 
 	public void setDistrict(String district) {
-		this.district = cleanString(district);
+		this.district = cleanAndTransformString(district);
 	}
 
 	@Column(nullable = false)
@@ -45,7 +45,7 @@ public final class Address extends DomainFunctions<Long> {
 	}
 
 	public void setNumber(String number) {
-		this.number = cleanString(number);
+		this.number = cleanAndTransformString(number);
 	}
 
 	public String getComplement() {
@@ -53,7 +53,7 @@ public final class Address extends DomainFunctions<Long> {
 	}
 
 	public void setComplement(String complement) {
-		this.complement = complement;
+		this.complement = cleanAndTransformString(complement);
 	}
 
 	@Column(nullable = false)
@@ -63,7 +63,7 @@ public final class Address extends DomainFunctions<Long> {
 	}
 
 	public void setCity(String city) {
-		this.city = cleanString(city);
+		this.city = cleanAndTransformString(city);
 	}
 
 	@Column(nullable = false)
@@ -73,7 +73,7 @@ public final class Address extends DomainFunctions<Long> {
 	}
 
 	public void setState(String state) {
-		this.state = cleanString(state);
+		this.state = cleanAndTransformString(state);
 	}
 
 	@Column(nullable = false)
@@ -83,6 +83,6 @@ public final class Address extends DomainFunctions<Long> {
 	}
 
 	public void setZipCode(String zipCode) {
-		this.zipCode = zipCode;
+		this.zipCode = cleanAndTransformString(zipCode);
 	}
 }
