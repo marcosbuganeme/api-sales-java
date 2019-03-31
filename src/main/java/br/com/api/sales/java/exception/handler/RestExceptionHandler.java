@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import br.com.api.sales.java.exception.ResourceDuplicateException;
 import br.com.api.sales.java.exception.ResourceNotFoundException;
 import br.com.api.sales.java.exception.builder.ErrorDetails;
 import br.com.api.sales.java.exception.builder.ValidationErrorDetails;
@@ -37,20 +38,20 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(details, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<?> handleResourceDuplicateException(ResourceNotFoundException exception) {
+    @ExceptionHandler(ResourceDuplicateException.class)
+    public ResponseEntity<?> handleResourceDuplicateException(ResourceDuplicateException exception) {
 
     	ErrorDetails details = ErrorDetails
                                     .Builder
                                     .newBuilder()
                                     .timestamp(new Date().getTime())
-                                    .status(HttpStatus.NOT_FOUND.value())
-                                    .title("Resource not found")
+                                    .status(HttpStatus.CONFLICT.value())
+                                    .title("Resource duplicate")
                                     .detail(exception.getMessage())
                                     .developerMessage(exception.getClass().getName())
                                     .build();
 
-        return new ResponseEntity<>(details, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(details, HttpStatus.CONFLICT);
     }
 
     @Override

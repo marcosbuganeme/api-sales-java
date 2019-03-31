@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.com.api.sales.java.exception.ResourceDuplicateException;
 import br.com.api.sales.java.exception.ResourceNotFoundException;
 import br.com.api.sales.java.model.Product;
 import br.com.api.sales.java.repository.ProductJpaRepository;
@@ -34,7 +35,7 @@ public @Service class ProductService {
 
         searchProduct(id);
         product.setId(id);
-        create(product);
+        repository.save(product);
     }
 
     @Transactional(rollbackFor =  ResourceNotFoundException.class)
@@ -57,9 +58,9 @@ public @Service class ProductService {
 
     private void validatedAfterSave(Product product) {
 
-        repository
-            .findByNameAllIgnoreCaseAndPrice(product.getName(), product.getPrice())
-            .filter(Objects::isNull)
-            .orElseThrow(() -> new ResourceNotFoundException("Product exists"));
+        Product searchProduct = repository.findByNameAllIgnoreCaseAndPrice(product.getName(), product.getPrice());
+
+        if (Objects.nonNull(searchProduct))
+        	throw new ResourceDuplicateException("Product exists");
     }
 }

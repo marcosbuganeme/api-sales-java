@@ -6,8 +6,6 @@ public interface IDomain<T> {
 
 	void setId(T id);
 
-	Integer getVersao();
-
 	default boolean isNew() {
 		return getId() == null;
 	}
