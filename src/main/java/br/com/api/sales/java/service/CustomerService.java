@@ -1,5 +1,6 @@
 package br.com.api.sales.java.service;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -12,15 +13,21 @@ import org.springframework.transaction.annotation.Transactional;
 import br.com.api.sales.java.exception.ResourceDuplicateException;
 import br.com.api.sales.java.exception.ResourceNotFoundException;
 import br.com.api.sales.java.model.Customer;
+import br.com.api.sales.java.model.Order;
 import br.com.api.sales.java.repository.CustomerJpaRepository;
+import br.com.api.sales.java.repository.OrderJpaRepository;
 
 public @Service class CustomerService {
 
-	private final CustomerJpaRepository repository;
+	private final OrderJpaRepository orderJpa;
+	private final CustomerJpaRepository customerJpa;
 
     @Autowired
-    public CustomerService(CustomerJpaRepository repository) {
-        this.repository = repository;
+    public CustomerService(OrderJpaRepository orderJpa,
+    					   CustomerJpaRepository customerJpa) {
+
+    	this.orderJpa = orderJpa;
+        this.customerJpa = customerJpa;
     }
 
 	@Transactional(rollbackFor = Exception.class)
@@ -28,7 +35,7 @@ public @Service class CustomerService {
 
 		validatedAfterSave(customer);
 
-		return repository.save(customer);
+		return customerJpa.save(customer);
 	}
 
 	@Transactional(rollbackFor = ResourceNotFoundException.class)
@@ -36,7 +43,7 @@ public @Service class CustomerService {
 
     	buildCustomerForUpdate(id, customer);
 
-        repository.save(customer);
+        customerJpa.save(customer);
 	}
 
 	@Transactional(rollbackFor = ResourceNotFoundException.class)
@@ -44,24 +51,31 @@ public @Service class CustomerService {
 
     	checkCustomerExists(id);
 
-        repository.deleteById(id);
+    	List<Order> orders = orderJpa.findAllByCustomerId(id);
+
+    	Optional
+    		.ofNullable(orders)
+    		.filter(verify -> !orders.isEmpty())
+    		.orElseThrow(() -> new IllegalArgumentException("There are purchases for this consumer"));
+
+        customerJpa.deleteById(id);
 	}
 
 	public Customer findById(Long id) {
 
-		return repository
+		return customerJpa
 					.findById(id)
 					.filter(Objects::nonNull)
 					.orElse(null);
 	}
 
 	public Page<Customer> findAllCustomers(Pageable pageable) {
-		return repository.findAll(pageable);
+		return customerJpa.findAll(pageable);
 	}
 
 	private void validatedAfterSave(Customer customer) {
 
-        Customer findCustomer = repository.findByMailAllIgnoreCase(customer.getMail());
+        Customer findCustomer = customerJpa.findByMailAllIgnoreCase(customer.getMail());
 
         if (Objects.nonNull(findCustomer))
         	throw new ResourceDuplicateException("Customer exists");

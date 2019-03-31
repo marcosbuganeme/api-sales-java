@@ -1,22 +1,20 @@
 package br.com.api.sales.java.model;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-
-import org.springframework.data.annotation.CreatedDate;
 
 import br.com.api.sales.java.model.shared.DomainAbstract;
 
@@ -33,10 +31,10 @@ public final class Order extends DomainAbstract<Long> {
 		itens = new ArrayList<>();
 	}
 
-	public void calculatePriceTotal() {
+	public void calculateTotalPrice() {
 
 		itens.forEach(item -> {
-			totalPrice.add(new BigDecimal(item.totalPrice()));
+			totalPrice.add(new BigDecimal(item.totalItemPrice()));
 		});
 	}
 
@@ -50,14 +48,7 @@ public final class Order extends DomainAbstract<Long> {
 		this.id = id;
 	}
 
-	@Override
-	@CreatedDate
-	@Column(name = "data_order", nullable = false, updatable = false)
-	public LocalDateTime getCreated() {
-		return super.getCreated();
-	}
-
-	@OneToOne
+	@ManyToOne(optional = false)
 	@NotNull(message = "Customer is required")
 	@JoinColumn(name = "id_customer", nullable = false)
 	public Customer getCustomer() {
@@ -68,7 +59,7 @@ public final class Order extends DomainAbstract<Long> {
 		this.customer = customer;
 	}
 
-	@OneToMany
+	@OneToMany(cascade = CascadeType.PERSIST)
 	public List<OrderItem> getItens() {
 		return itens;
 	}

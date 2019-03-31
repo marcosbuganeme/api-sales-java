@@ -25,7 +25,7 @@ public final class OrderItem extends DomainAbstract<Long> {
 	private Product product;
 	private Integer quantity;
 
-	public Double totalPrice() {
+	public Double totalItemPrice() {
 
 		verifyAmountIsValid();
 		verifyThatProductIsValid();

@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 import br.com.api.sales.java.model.shared.DomainAbstract;
 
 @Entity
-@Table(name = "products")
+@Table(name = "product")
 public final class Product extends DomainAbstract<Long> {
 
 	private Long id;
