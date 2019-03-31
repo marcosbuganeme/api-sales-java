@@ -12,6 +12,16 @@ public abstract class DomainFunctions<T> {
 	private static final String EMPTY = StringUtils.EMPTY;
 	private static final String REGEX_ONLY_NUMBERS = "\\D";
 
+	protected String cleanString(String string) {
+
+		return Optional
+				.ofNullable(string)
+				.filter(isNotBlank())
+				.map(stripAccents())
+				.map(toLowerCase())
+				.orElse(null);
+	}
+	
 	protected boolean isNotBlank(String string) {
 
 		return Optional
