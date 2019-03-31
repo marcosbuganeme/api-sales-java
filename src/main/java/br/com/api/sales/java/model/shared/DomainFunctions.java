@@ -12,7 +12,7 @@ public abstract class DomainFunctions<T> {
 	private static final String EMPTY = StringUtils.EMPTY;
 	private static final String REGEX_ONLY_NUMBERS = "\\D";
 
-	protected String cleanString(String string) {
+	protected String cleanAndTransformString(String string) {
 
 		return Optional
 				.ofNullable(string)
