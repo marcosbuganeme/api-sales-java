@@ -1,5 +1,9 @@
 package br.com.api.sales.java.exception.handler;
 
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,12 +16,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import br.com.api.sales.java.exception.ResourceNotFoundException;
 import br.com.api.sales.java.exception.builder.ErrorDetails;
-import br.com.api.sales.java.exception.builder.ResourceNotFoundDetails;
 import br.com.api.sales.java.exception.builder.ValidationErrorDetails;
-
-import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
@@ -25,15 +24,31 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<?> handleResourceNotFoundException(ResourceNotFoundException exception) {
 
-        ResourceNotFoundDetails details = ResourceNotFoundDetails
-                                                .Builder
-                                                .newBuilder()
-                                                .timestamp(new Date().getTime())
-                                                .status(HttpStatus.NOT_FOUND.value())
-                                                .title("Resource not found")
-                                                .detail(exception.getMessage())
-                                                .developerMessage(exception.getClass().getName())
-                                                .build();
+    	ErrorDetails details = ErrorDetails
+                                    .Builder
+                                    .newBuilder()
+                                    .timestamp(new Date().getTime())
+                                    .status(HttpStatus.NOT_FOUND.value())
+                                    .title("Resource not found")
+                                    .detail(exception.getMessage())
+                                    .developerMessage(exception.getClass().getName())
+                                    .build();
+
+        return new ResponseEntity<>(details, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<?> handleResourceDuplicateException(ResourceNotFoundException exception) {
+
+    	ErrorDetails details = ErrorDetails
+                                    .Builder
+                                    .newBuilder()
+                                    .timestamp(new Date().getTime())
+                                    .status(HttpStatus.NOT_FOUND.value())
+                                    .title("Resource not found")
+                                    .detail(exception.getMessage())
+                                    .developerMessage(exception.getClass().getName())
+                                    .build();
 
         return new ResponseEntity<>(details, HttpStatus.NOT_FOUND);
     }
