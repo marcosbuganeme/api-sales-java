@@ -72,8 +72,8 @@ public @Service class CustomerService {
 		Customer findCustomer = checkCustomerExists(id);
 
 		customerUpdate.setId(id);
-		customerUpdate.setCriado(findCustomer.getCriado());
-		customerUpdate.setModificado(findCustomer.getModificado());
+		customerUpdate.setCreated(findCustomer.getCreated());
+		customerUpdate.setModified(findCustomer.getModified());
 		
 		if (Objects.nonNull(findCustomer.getAddress())) {
 			

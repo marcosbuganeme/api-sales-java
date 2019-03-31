@@ -75,8 +75,8 @@ public @Service class ProductService {
 		Product findProduct = checkProductExists(id);
 
         productUpdate.setId(id);
-        productUpdate.setCriado(findProduct.getCriado());
-        productUpdate.setModificado(findProduct.getModificado());
+        productUpdate.setCreated(findProduct.getCreated());
+        productUpdate.setModified(findProduct.getModified());
 	}
 
 	/**
