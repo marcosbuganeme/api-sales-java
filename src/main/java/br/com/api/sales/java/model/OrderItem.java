@@ -87,7 +87,7 @@ public final class OrderItem extends DomainAbstract<Long> {
 	}
 
 	private Predicate<Integer> quantityGreaterThanZero() {
-		return quantity -> quantity < 0;
+		return quantity -> quantity > 0;
 	}
 
 	private void verifyThatProductIsValid() {

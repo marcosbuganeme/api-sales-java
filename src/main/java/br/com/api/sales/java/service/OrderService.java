@@ -37,6 +37,21 @@ public @Service class OrderService {
 		return orderJpa.save(order);
 	}
 
+	public Order findById(Long id) {
+
+		return orderJpa
+					.findById(id)
+					.orElse(null);
+	}
+
+	public Page<Order> findFirstTenByCostumer(Long idCustomer, Pageable pageable) {
+		return orderJpa.queryFirst10ByCustomerId(idCustomer, pageable);
+	}
+
+	public Page<Order> findAllByCustomer(Long idCustomer, Pageable pageable) {
+		return orderJpa.findByCustomerId(idCustomer, pageable);
+	}
+
 	private void checkIfConsumerIsRegistered(Order order) {
 
 		Optional
@@ -53,20 +68,5 @@ public @Service class OrderService {
 		Optional
 			.ofNullable(customerSearch)	
 			.orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
-	}
-
-	public Order findById(Long id) {
-
-		return orderJpa
-					.findById(id)
-					.orElse(null);
-	}
-
-	public Page<Order> findFirstTenByCostumer(Long idCustomer, Pageable pageable) {
-		return orderJpa.queryFirst10ByCustomerId(idCustomer, pageable);
-	}
-
-	public Page<Order> findAllByCustomer(Long idCustomer, Pageable pageable) {
-		return orderJpa.findByCustomerId(idCustomer, pageable);
 	}
 }
