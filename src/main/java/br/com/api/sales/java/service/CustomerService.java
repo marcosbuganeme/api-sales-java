@@ -13,17 +13,17 @@ import org.springframework.transaction.annotation.Transactional;
 import br.com.api.sales.java.exception.ResourceDuplicateException;
 import br.com.api.sales.java.exception.ResourceNotFoundException;
 import br.com.api.sales.java.model.Customer;
-import br.com.api.sales.java.model.Order;
+import br.com.api.sales.java.model.Ordered;
 import br.com.api.sales.java.repository.CustomerJpaRepository;
-import br.com.api.sales.java.repository.OrderJpaRepository;
+import br.com.api.sales.java.repository.OrderedJpaRepository;
 
 public @Service class CustomerService {
 
-	private final OrderJpaRepository orderJpa;
+	private final OrderedJpaRepository orderJpa;
 	private final CustomerJpaRepository customerJpa;
 
     @Autowired
-    public CustomerService(OrderJpaRepository orderJpa,
+    public CustomerService(OrderedJpaRepository orderJpa,
     					   CustomerJpaRepository customerJpa) {
 
     	this.orderJpa = orderJpa;
@@ -51,7 +51,7 @@ public @Service class CustomerService {
 
     	checkCustomerExists(id);
 
-    	List<Order> orders = orderJpa.findAllByCustomerId(id);
+    	List<Ordered> orders = orderJpa.findAllByCustomerId(id);
 
     	Optional
     		.ofNullable(orders)

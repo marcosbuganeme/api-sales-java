@@ -20,25 +20,25 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import br.com.api.sales.java.controller.shared.ControllerShared;
-import br.com.api.sales.java.model.Order;
-import br.com.api.sales.java.service.OrderService;
+import br.com.api.sales.java.model.Ordered;
+import br.com.api.sales.java.service.OrderedService;
 import io.swagger.annotations.ApiOperation;
 
 @RestController
-@RequestMapping("v1/orders")
-public class OrderController extends ControllerShared<Order> {
+@RequestMapping("v1/requests")
+public class OrderController extends ControllerShared<Ordered> {
 
-	private @Autowired OrderService service;
+	private @Autowired OrderedService service;
 
 	@PostMapping
 	@PreAuthorize("hasRole('ROLE_USER')")
-	@ApiOperation(value = "Create order for id valid", response = Order.class)
-	public ResponseEntity<?> createOrder(@Valid @RequestBody Order order, UriComponentsBuilder uriBuilder) {
+	@ApiOperation(value = "Create ordered for id valid", response = Ordered.class)
+	public ResponseEntity<?> createOrdered(@Valid @RequestBody Ordered ordered, UriComponentsBuilder uriBuilder) {
 
-		Order createdOrder = service.create(order);
+		Ordered createdOrder = service.create(ordered);
 
         URI location = uriBuilder
-				        .path("v1/customers/{id:\\d+}")
+				        .path("v1/requests/{id:\\d+}")
 				        .buildAndExpand(createdOrder.getId())
 				        .toUri();
 
@@ -46,10 +46,10 @@ public class OrderController extends ControllerShared<Order> {
 	}
 
     @GetMapping("{id:\\d+}")
-    @ApiOperation(value = "Return find order by id", response = Order.class)
+    @ApiOperation(value = "Return find ordered by id", response = Ordered.class)
     public ResponseEntity<?> findCustomerById(@PathVariable Long id) {
 
-    	Order findOrder = service.findById(id);
+    	Ordered findOrder = service.findById(id);
 
         return Optional
                 .ofNullable(findOrder)
@@ -60,11 +60,11 @@ public class OrderController extends ControllerShared<Order> {
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("customer/{idCustomer:\\d+}/first/ten")
-    @ApiOperation(value = "Return a list content ten orders filter by customer", response = Order[].class)
+    @ApiOperation(value = "Return a list content ten orders filter by customer", response = Ordered[].class)
     public ResponseEntity<?> firstTenOrdersByCostumer(@PathVariable Long idCostumer, 
     												  @PageableDefault Pageable pageable) {
 
-        Page<Order> results = service.findFirstTenByCostumer(idCostumer, pageable);
+        Page<Ordered> results = service.findFirstTenByCostumer(idCostumer, pageable);
 
         return Optional
                 .ofNullable(results)
@@ -75,11 +75,11 @@ public class OrderController extends ControllerShared<Order> {
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("customer/{idCustomer:\\d+}/all")
-    @ApiOperation(value = "Return a list content all orders by customer", response = Order[].class)
+    @ApiOperation(value = "Return a list content all orders by customer", response = Ordered[].class)
     public ResponseEntity<?> allOrderByCostumer(@PathVariable Long idCostumer, 
     											@PageableDefault Pageable pageable) {
 
-        Page<Order> results = service.findAllByCustomer(idCostumer, pageable);
+        Page<Ordered> results = service.findAllByCustomer(idCostumer, pageable);
 
         return Optional
                 .ofNullable(results)

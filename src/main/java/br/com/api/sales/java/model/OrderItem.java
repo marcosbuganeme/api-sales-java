@@ -6,6 +6,7 @@ import java.util.function.Predicate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -21,9 +22,13 @@ import br.com.api.sales.java.model.shared.DomainAbstract;
 public final class OrderItem extends DomainAbstract<Long> {
 
 	private Long id;
-	private Order order;
+	private Ordered ordered;
 	private Product product;
 	private Integer quantity;
+
+	{
+		ordered = new Ordered();
+	}
 
 	public Double totalItemPrice() {
 
@@ -45,17 +50,17 @@ public final class OrderItem extends DomainAbstract<Long> {
 	}
 
 	@ManyToOne
-	@JoinColumn(name = "id_order", nullable = false)
-	public Order getOrder() {
-		return order;
+	@JoinColumn(foreignKey=@ForeignKey(name = "fk_id_ordered"), name = "id_ordered", nullable = false)
+	public Ordered getOrdered() {
+		return ordered;
 	}
 
-	public void setOrder(Order order) {
-		this.order = order;
+	public void setOrdered(Ordered ordered) {
+		this.ordered = ordered;
 	}
 
 	@OneToOne
-	@JoinColumn(name = "id_product", nullable = false)
+	@JoinColumn(foreignKey = @ForeignKey(name = "fk_id_product"), name = "id_product", nullable = false)
 	public Product getProduct() {
 		return product;
 	}
