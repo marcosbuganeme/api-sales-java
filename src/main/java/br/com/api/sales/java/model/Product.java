@@ -1,7 +1,5 @@
 package br.com.api.sales.java.model;
 
-import java.math.BigDecimal;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -13,18 +11,18 @@ import javax.validation.constraints.NotNull;
 import br.com.api.sales.java.model.shared.DomainAbstract;
 
 @Entity
-@Table(name = "products")
-public class Product extends DomainAbstract<Long> {
+@Table(name = "product")
+public final class Product extends DomainAbstract<Long> {
 
 	private Long id;
     private String name;
-    private BigDecimal price;
+    private Double price;
 
     public Product() {
         super();
     }
 
-    public Product(String name, BigDecimal price) {
+    public Product(String name, Double price) {
         this.name = name;
         this.price = price;
     }
@@ -46,15 +44,15 @@ public class Product extends DomainAbstract<Long> {
 
     public void setName(String name) {
 
-        this.name = cleanString(name);
+        this.name = cleanAndTransformString(name);
     }
 
     @NotNull(message = "Price is required")
-    public BigDecimal getPrice() {
+    public Double getPrice() {
         return price;
     }
 
-    public void setPrice(BigDecimal price) {
+    public void setPrice(Double price) {
         this.price = price;
     }
 }

@@ -15,26 +15,26 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @EntityListeners(AuditingEntityListener.class)
 public abstract class DomainAbstract<T extends Serializable> extends DomainFunctions<T> implements IDomain<T> {
 
-	private LocalDateTime criado;
-	private LocalDateTime modificado;
+	private LocalDateTime created;
+	private LocalDateTime modified;
 
 	@CreatedDate
 	@Column(nullable = false, updatable = false)
-	public LocalDateTime getCriado() {
-		return criado;
+	public LocalDateTime getCreated() {
+		return created;
 	}
 
-	public void setCriado(LocalDateTime criado) {
-		this.criado = criado;
+	public void setCreated(LocalDateTime created) {
+		this.created = created;
 	}
 
 	@LastModifiedDate
 	@Column(insertable = false)
-	public LocalDateTime getModificado() {
-		return modificado;
+	public LocalDateTime getModified() {
+		return modified;
 	}
 
-	public void setModificado(LocalDateTime modificado) {
-		this.modificado = modificado;
+	public void setModified(LocalDateTime modified) {
+		this.modified = modified;
 	}
 }
