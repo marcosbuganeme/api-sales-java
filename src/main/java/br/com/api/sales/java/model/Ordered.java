@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -19,8 +18,8 @@ import javax.validation.constraints.NotNull;
 import br.com.api.sales.java.model.shared.DomainAbstract;
 
 @Entity
-@Table(name = "order")
-public final class Order extends DomainAbstract<Long> {
+@Table(name = "tb_order")
+public final class Ordered extends DomainAbstract<Long> {
 
 	private Long id;
 	private Customer customer;
@@ -29,6 +28,7 @@ public final class Order extends DomainAbstract<Long> {
 
 	{
 		itens = new ArrayList<>();
+		totalPrice = new BigDecimal(0);
 	}
 
 	public void calculateTotalPrice() {
@@ -59,7 +59,7 @@ public final class Order extends DomainAbstract<Long> {
 		this.customer = customer;
 	}
 
-	@OneToMany(cascade = CascadeType.PERSIST)
+	@OneToMany
 	public List<OrderItem> getItens() {
 		return itens;
 	}

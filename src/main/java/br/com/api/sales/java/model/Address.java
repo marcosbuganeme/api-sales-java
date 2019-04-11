@@ -7,7 +7,6 @@ import javax.validation.constraints.NotBlank;
 import br.com.api.sales.java.model.shared.DomainFunctions;
 
 @Embeddable
-
 public final class Address extends DomainFunctions<Long> {
 
 	private String street;
