@@ -69,7 +69,19 @@ To deploy the application, package it into a runnable JAR file:
 
 ```bash
 mvn package
-java -jar target/sales-force-app-0.1.0.jar
+java -jar target/api-sales-java-1.0.0.jar
+```
+
+Execute o seguinte comando para realizar um build da aplicação via Docker
+
+```bash
+docker build -t api-sales-java:tag .
+```
+
+Para executar a aplicação
+
+```bash
+docker run -p 8080:8080 api-sales-java:latest
 ```
 
 ## Contributions
@@ -82,6 +94,6 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE) f
 
 ## Contact
 
-Your Name – [@yourTwitter](https://twitter.com/yourTwitter) – email@example.com
+Marcos Buganeme – [@marcosbuganeme](https://twitter.com/marcosbuganeme) – molavosbdeveloper@gmail.com
 
-Project Link: https://github.com/your-username/sales-force-app
+Project Link: https://github.com/marcosbuganeme/api-sales-java
