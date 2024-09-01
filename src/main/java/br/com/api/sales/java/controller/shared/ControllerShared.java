@@ -23,6 +23,6 @@ public abstract class ControllerShared<T> {
     }
 
     protected Function<Page<T>, ResponseEntity<Page<T>>> pageResourceNotFound() {
-        return page -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(page);
+        return page -> ResponseEntity.status(HttpStatus.OK).body(page);
     }
 }
