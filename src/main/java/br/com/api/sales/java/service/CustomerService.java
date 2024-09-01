@@ -63,10 +63,10 @@ public @Service class CustomerService {
 
 	public Customer findById(Long id) {
 
-		return customerJpa
-					.findById(id)
-					.filter(Objects::nonNull)
-					.orElse(null);
+		Customer customer = customerJpa
+				.findById(id)
+				.orElse(null);
+		return customer;
 	}
 
 	public Page<Customer> findAllCustomers(Pageable pageable) {
@@ -83,24 +83,28 @@ public @Service class CustomerService {
 
 	private void buildCustomerForUpdate(Long id, Customer customerUpdate) {
 
-		Customer findCustomer = checkCustomerExists(id);
+		Customer customer = checkCustomerExists(id);
 
 		customerUpdate.setId(id);
-		customerUpdate.setCreated(findCustomer.getCreated());
-		customerUpdate.setModified(findCustomer.getModified());
+		customerUpdate.setCreated(customer.getCreated());
+		customerUpdate.setModified(customer.getModified());
 		
-		if (Objects.nonNull(findCustomer.getAddress())) {
+		if (Objects.nonNull(customer.getAddress())) {
 			
 		}
 	}
 
 	private Customer checkCustomerExists(Long id) {
 
+		if (Objects.isNull(id)) {
+			throw new ResourceNotFoundException("Customer not found");
+		}
+
 		Customer customer = findById(id);
 
-		Optional
-	        .ofNullable(customer)
-	        .orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
+		if (Objects.isNull(customer)) {
+			throw new ResourceNotFoundException("Customer not found");
+		}
 
 		return customer;
 	}
